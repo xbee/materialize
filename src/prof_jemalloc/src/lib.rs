@@ -18,7 +18,7 @@ use std::sync::Arc;
 use std::sync::Mutex;
 use std::{ffi::CString, io::BufRead, time::Instant};
 
-use jemalloc_ctl::{raw, stats};
+use jemalloc_ctl::{epoch, raw, stats};
 use lazy_static::lazy_static;
 use tempfile::NamedTempFile;
 
@@ -165,8 +165,11 @@ impl JemallocProfCtl {
         let f = NamedTempFile::new()?;
         let path = CString::new(f.path().as_os_str().as_bytes().to_vec()).unwrap();
 
+        epoch::advance().unwrap();
+
         let active = stats::active::read()?;
-        eprintln!("active: {}", active);
+        let allocated = stats::allocated::read()?;
+        eprintln!("active: {}, allocated: {}", active, allocated);
         // SAFETY: "prof.dump" is documented as being writable and taking a C string as input:
         // http://jemalloc.net/jemalloc.3.html#prof.dump
         unsafe { raw::write(b"prof.dump\0", path.as_ptr()) }?;
