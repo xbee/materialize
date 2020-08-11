@@ -1583,8 +1583,7 @@ dependencies = [
 [[package]]
 name = "jemalloc-sys"
 version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d3b9f3f5c9b31aa0f5ed3260385ac205db665baa41d49bb8338008ae94ede45"
+source = "git+git://github.com/umanwizard/jemallocator#50fb16cc42bc256af96b4b1de0f2c379392b67e5"
 dependencies = [
  "cc",
  "fs_extra",
